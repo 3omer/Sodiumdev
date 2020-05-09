@@ -1,0 +1,41 @@
+<%- include ("_header") %>
+<main class="container-fluid p-0">
+    <% if ( articles.length > 0 ) {%>
+    <section class="art-list bg-transparent">
+        <% articles.forEach(article => { %>
+        <article class="art-widget bg-white shadow-sm my-2 p-2">
+            <div class="art-widget-title h6">
+                <a class="" href="">
+                    <%= article.title %>
+                </a>
+            </div>
+            <div class="art-widget-describtion p-2 text-black-50 text-truncate">
+                <%= article.describtion %>
+            </div>
+            <div class="art-widget-footer d-flex justify-content-end m-1">
+                <a class="userame small badge badge-pill badge-info" href="">
+                    <%= article.author %>
+                </a>
+                <span class="date small badge badge-pill badge-secondary" href="">
+                    <%= article.created %>
+                </span>
+            </div>
+        </article>
+        <% }) %>
+
+        <% } else { %>
+        <article class="art-widget bg-white shadow-sm m-2 p-2">
+            No articles yet.
+        </article>
+        <% } %>
+    </section>
+
+    <div class="tags-list my-2 p-2 bg-white shadow-sm">
+        <span class="m-3">Tags</span>
+        <a class="tag badge badge-pill" href="">back-end</a>
+        <a class="tag badge badge-pill" href="">api</a>
+        <a class="tag badge badge-pill" href="">restfull</a>
+    </div>
+</main>
+
+<%- include ("_footer") %>

@@ -1,0 +1,51 @@
+
+header {
+    background-color: #1D3557;
+}
+
+header .btn {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.btn-light {
+    color: #1D3557 !important;
+}
+.badge-info {
+    background-color: #F1FAEE;
+    color: #444444;
+}
+
+.badge-secondary {
+    background-color: transparent;
+    border: solid 1px #eee;
+    color: #999;
+    font-size: .7rem;
+}
+
+.tag {
+    background-color: #1D3557;
+    color: #fff;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.card-white {
+    background-color: #ffffff;
+}
+
+.bg-secondary {
+    background-color: #457B9D !important;
+}
+
+
+/* article widget */
+
+.art-widget-title a, .art-widget-title a:visited, .art-widget-title a:active {
+    text-decoration: none;
+    color: #444444;
+}
+
+/* aricle reading page */
+.article-header .author-widget {
+}

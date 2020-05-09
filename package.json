@@ -1,0 +1,29 @@
+{
+  "name": "aramedium",
+  "version": "1.0.0",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "author": "Omar M. Osman",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.0.2",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "mongoose": "^5.9.9",
+    "morgan": "^1.10.0",
+    "pug": "^2.0.4"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1",
+    "supertest": "^4.0.2"
+  }
+}
