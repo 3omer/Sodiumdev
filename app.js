@@ -1,7 +1,9 @@
 const path = require("path");
 const morgan = require("morgan");
 const express = require("express");
+require("./app_server/models/db");
 const indexRouter = require("./app_server/routes/index");
+
 
 
 const app = express();
