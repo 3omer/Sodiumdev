@@ -1,0 +1,54 @@
+<%- include ("_header") %>
+
+<head>
+    <link rel="stylesheet" href="/css/easymde.min.css">
+    <script src="/js/easymde.min.js"></script>
+</head>
+<main class="container-fluid p-0">
+    <section class="bg-transparent">
+        <%- include ("_author_widget") %>
+        <div id="editor">
+            <form action="" method="post" class="m-auto p-2">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="title" placeholder="Post title" value="<%= article.title || '' %>" >
+                </div>
+                <div class="form-group">
+                    <input type="file" class="form-control" name="cover" placeholder="upload cover" disabled>
+                </div>
+                <textarea name="content" cols="30" rows="10" placeholder="Start editing"><%= article.content || "" %> </textarea>
+                <div class="m-2 p-3">
+                    <input class="btn btn-s btn-primary w-100" type="submit" value="Submit">
+                </div>
+                <% if (article) { %>
+                    <input type="hidden" name="id" value="<%= article.id %>">
+                <% } %>
+            </form>
+        </div>
+    </section>
+</main>
+<script>
+    var easyMDE = new EasyMDE({
+        toolbar: ["heading-1", "heading-2", "heading-3",
+            "bold", "quote", "unordered-list",
+            "ordered-list", "code", "link",
+            "image", "preview"],
+        autosave: {
+            enabled: false,
+            uniqueId: "articleEditor",
+            delay: 1000,
+            submit_delay: 5000,
+            timeFormat: {
+                locale: 'en-US',
+                format: {
+                    year: 'numeric',
+                    month: 'long',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                },
+            },
+            text: "Autosaved: "
+        },
+    }); 
+</script>
+<%- include ("_footer") %>

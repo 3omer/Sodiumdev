@@ -1,9 +1,14 @@
 const mongoose = require("mongoose")
 
-const dbURI = "mongodb://localhost/aow"
+const dbURI = "mongodb://localhost/sodium"
 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-
+mongoose.connect(dbURI,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    })
+    
 mongoose.connection.on("connected", () => {
     console.log(`Mongoose connected to ${dbURI}`)
 })
@@ -18,10 +23,10 @@ mongoose.connection.on("disconnected", () => {
 
 const gracefulShutdown = (msg, cb) => {
     mongoose.connection.close()
-    .then(() => {
-        console.log(`Mongoose disconnected through: ${msg}`)
-        cb()
-    })
+        .then(() => {
+            console.log(`Mongoose disconnected through: ${msg}`)
+            cb()
+        })
 }
 
 
@@ -45,3 +50,5 @@ process.on("SIGTERM", () => {
         process.exit(0)
     })
 })
+
+require('./articles');

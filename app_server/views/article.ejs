@@ -6,35 +6,20 @@
                 <h4 class="art-title m-1 p-1">
                     <%= article.title %>
                 </h4>
-                <div class="art-cover text-center">
-                    <img class="img-fluid" src="assest/placeholder.jpg" alt="" height="220px">
+                <div class="art-cover text-center my-2">
+                    <%# art.cover  %> 
+                    <img class="img-fluid" src="/assest/cover_ph.png" alt="" height="220px">
                 </div>
-                <div class="author-widget bg-white rounded d-flex p-2">
-                    <div class="author-widget-avatar">
-                        <img class="img-fluid rounded-circle border border-light" src="assest/profile.jpg" alt="" width="60" height="100">
-                    </div>
-                    <div class="mx-1">
-                        <div class="author-widget-username">username</div>
-                        <div class="author-widget-date small">3,Aug, 2020</div>
-                    </div>
-                </div>
+                <%# depencies for widget %> 
+                <%- include ("_article_author_widget") %> 
             </div>
-            <div class="art-body bg-white my-2 p-2">
-                <%= article.body %>
+            <div id="articleBody" class="art-body bg-white my-2 p-2">
+                <%- article.content %>
             </div>
         </article>
     </section>
-    <div class="art-refs bg-white p-2 my-2">
-        <span class="">Refs</span>
-        <% article.refs.forEach(ref => { %>
-        <div class="ref p-1 my-1 bg-white shadow-sm">
-            <a class="" href="<%= ref.url %> ">
-                <%= ref.title %>
-            </a>
-        </div>
-        <% }) %>
-    </div>
-    <% if (article.tags) { %>
+
+    <% if (article.tags.length) { %>
     <div class="tags-list my-2 p-2 bg-white shadow-sm">
         <span class="m-3">Tags</span>
         <% article.tags.forEach(tag => { %>

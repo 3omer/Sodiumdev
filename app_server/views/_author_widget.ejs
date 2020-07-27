@@ -1,0 +1,11 @@
+<%# dependencies: author object, [..article] %>
+<div class="author-widget bg-white rounded d-flex p-2">
+    <div class="author-widget-avatar">
+        <img class="img-fluid rounded-circle border border-light" src="<%= author.avatar || '/assest/avatar_ph.png' %> " 
+         alt="" width="60" height="100">
+    </div>
+    <div class="mx-1">
+        <div class="author-widget-username"><%= author.username %> </div>
+    </div>
+</div>
+</div>

@@ -3,9 +3,10 @@
     <% if ( articles.length > 0 ) {%>
     <section class="art-list bg-transparent">
         <% articles.forEach(article => { %>
-        <article class="art-widget bg-white shadow-sm my-2 p-2">
+        <article data-id="<%= article.id %> " 
+                class="art-widget bg-white shadow-sm my-2 p-2">
             <div class="art-widget-title h6">
-                <a class="" href="">
+                <a class="" href="/blog/<%= article.id %>">
                     <%= article.title %>
                 </a>
             </div>
@@ -14,10 +15,10 @@
             </div>
             <div class="art-widget-footer d-flex justify-content-end m-1">
                 <a class="userame small badge badge-pill badge-info" href="">
-                    <%= article.author %>
+                    <%= article.author.username %>
                 </a>
                 <span class="date small badge badge-pill badge-secondary" href="">
-                    <%= article.created %>
+                    <%= article.createdAt.toGMTString() %>
                 </span>
             </div>
         </article>
