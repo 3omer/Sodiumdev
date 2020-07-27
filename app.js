@@ -28,7 +28,11 @@ app.set("view engine", "ejs");
 
 //TODO : read store config from env
 // config passport
-const store = new MongoStore({ databaseName: "sodiumdev", collection: "sessions" })
+const store = new MongoStore({
+    uri: process.env.MONGODB_URI,
+    databaseName: "sodiumdev",
+    collection: "sessions"
+})
 store.on("error", console.error)
 
 app.use(session({
@@ -45,9 +49,9 @@ passport.serializeUser((user, done) => {
 })
 passport.deserializeUser((id, done) => {
     User.findById(id)
-        .then((user) =>{
+        .then((user) => {
             done(null, user)
-        } )
+        })
         .catch(error => done(error))
 
 })
