@@ -1,5 +1,5 @@
 {
-  "name": "aramedium",
+  "name": "Sodium",
   "version": "1.0.0",
   "main": "app.js",
   "directories": {
@@ -28,6 +28,9 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.4",
     "validator": "^13.1.1"
+  },
+  "engines": {
+    "node": "10.x"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
