@@ -26,8 +26,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.resolve(__dirname, "app_server", "views"));
 app.set("view engine", "ejs");
 
+//TODO : read store config from env
 // config passport
-const store = new MongoStore({ databaseName: "sodium", collection: "sessions" })
+const store = new MongoStore({ databaseName: "sodiumdev", collection: "sessions" })
 store.on("error", console.error)
 
 app.use(session({
@@ -70,6 +71,7 @@ app.use((err, req, res, next) => {
     res.send("smth went wrong.")
 })
 
-app.listen(3000, function () {
-    console.log("Server is Listening 3000")
+const PORT = process.env.PORT || 3000
+app.listen(PORT, function () {
+    console.log(`Server is Listening on ${PORT}`)
 })
