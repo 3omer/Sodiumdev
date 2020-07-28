@@ -12,8 +12,10 @@ passport.use(new LocalStrategy(
         try {
             const user = await User.findOne({ email: email })
             if (!user) return done(null, false, { message: "Invalid Credentials" })
-            if (!user.verifyPassword(password)) return done(null, false, { message: "Invalid Credentials" })
-            return done(null, user)
+            user.verifyPassword(password).then((isValid) => {
+                if (!isValid) return done(null, false, { message: "Invalid Credentials" })
+                done(null, user)
+            })
         } catch (error) {
             done(error)
         }
@@ -21,13 +23,11 @@ passport.use(new LocalStrategy(
     }
 ))
 
-
 const register = (req, res) => {
     res.render("register")
 }
 
 const handleRegister = async (req, res) => {
-    userData = req.body
     // console.log(userData)
     try {
         const user = new User(req.body)
@@ -35,29 +35,24 @@ const handleRegister = async (req, res) => {
         req.flash("info", "Welocme!")
         res.redirect("/")
     } catch (error) {
+        console.error(error)
         req.flash("error", "User already exists try different email.")
         res.redirect("/register")
     }
 }
 
 const login = (req, res) => {
+    if (req.isAuthenticated()) return res.redirect("/")
     res.render("login")
 }
 
-const handleLogin = async (req, res) => {
-    const cred = { email: req.body.email, password: req.body.password }
-    try {
-        const author = await User.findByCredential(cred.email, cred.password)
-        if (!author) {
-            res.status(400).send("Error occured")
-        }
-        console.log(author)
-        res.redirect("/")
-    } catch (error) {
-        console.log(error)
-        res.status(400).send(error)
-    }
-}
+const handleLogin = passport.authenticate('local', {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+    successFlash: "Welcome!"
+})
+
 
 const logOut = (req, res) => {
     req.logout()

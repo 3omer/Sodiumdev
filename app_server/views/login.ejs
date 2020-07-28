@@ -1,6 +1,7 @@
 <%- include ("_header") %>
 <main class="container-fluid p-0">
-    <section class="w-75 m-3 mx-auto rounded bg-white shadow-sm">
+    <section class="w-75 m-3 p-1 mx-auto rounded bg-white shadow-sm">
+        <%- include ("_flash") %>
         <div class="m-auto p-3">
             <form accept="" method="POST">
                 <div class="form-group">
@@ -15,7 +16,7 @@
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                     <small class="text-muted">or</small>
                     <div><a class="small alert-link" href="/register">Register Now</a></div>
-                </div>
+                </div> 
             </form>
         </div>
     </section>

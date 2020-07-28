@@ -1,0 +1,23 @@
+<% if (messages.error) { %>
+<div class="alert alert-danger text-center p-1 m-1">
+    <span>
+        <%= messages.error %>
+    </span>
+</div>
+<% } %>
+
+<% if (messages.info) { %>
+<div class="alert alert-info text-center p-1 m-1">
+    <span>
+        <%= messages.info %>
+    </span>
+</div>
+<% } %>
+
+<% if (messages.success) { %>
+<div class="alert alert-success text-center p-1 m-1">
+    <span>
+        <%= messages.success %>
+    </span>
+</div>
+<% } %>

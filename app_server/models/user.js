@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 })
 
 
-userSchema.pre("save", async function() {
+userSchema.pre("save", async function () {
     const user = this
     if (user.isModified("password")) {
         user.password = await bcrypt.hash(user.password, 12)
@@ -46,8 +46,8 @@ userSchema.statics.findByCredential = async (email, password) => {
     return user
 }
 
-userSchema.methods.verifyPassword = async function(password) {
-    return await bcrypt.compare(password, this.password)
+userSchema.methods.verifyPassword = function (password) {
+    return bcrypt.compare(password, this.password)
 }
 
 const User = mongoose.model("User", userSchema)

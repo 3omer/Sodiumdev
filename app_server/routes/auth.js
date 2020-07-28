@@ -8,13 +8,7 @@ const router = express.Router();
 router.get("/register", ctrlAuth.register)
 router.post("/register", ctrlAuth.handleRegister)
 router.get("/login", ctrlAuth.login)
-router.post("/login", passport.authenticate('local', {
-                                                        successRedirect: "/",
-                                                        failureRedirect: "/login",
-                                                        failureFlash: true,
-                                                        successFlash: "Welcome!"
-                                                    })
-)
+router.post("/login", ctrlAuth.handleLogin)
 
 router.get("/logout", ctrlAuth.isLoggedIn, ctrlAuth.logOut)
 

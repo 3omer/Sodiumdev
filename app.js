@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const express = require("express");
 const session = require("express-session")
 const passport = require("passport")
-const flash = require('connect-flash');
+const flash = require('express-flash');
 const MongoStore = require("connect-mongodb-session")(session)
 require("./app_server/models/db");
 const indexRouter = require("./app_server/routes/index");
