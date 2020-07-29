@@ -29,6 +29,8 @@ const articleScehma = new mongoose.Schema({
         type: String
     }
 })
-
+articleScehma.methods.isOwner = function(id) {
+    return this.author.id === String(id) 
+}
 const Article = mongoose.model("Article", articleScehma)
 module.exports = { Article }

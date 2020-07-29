@@ -3,6 +3,7 @@ controllers of:
 - admin dashboard
 */
 const { Article } = require("../models/articles")
+const flash = require("express-flash")
 
 // list all author articles
 const dashboard = (req, res) => {
@@ -13,19 +14,28 @@ const dashboard = (req, res) => {
 
 // param id=123 to edit exiting article
 const editor = (req, res, next) => {
-    const id = req.query["edit"]
-    if (id) {
-        // fetch by user and id TODO
+    const id = req.query["edit"] || ""
+    if (!id) {
+        console.log("new post")
+        return res.render("editor", { author: req.user, article: {} })
+    } else {
+        // fetch by art id then check if logged user is the autor
         Article.findOne({ _id: id }).then(article => {
+            console.log(article.author.id, req.user.id)
             if (article) {
-                console.log("found")
-                return res.render("editor", { author: req.user, article: article })
+                if (!article.isOwner(req.user.id)) {
+                    console.log(" found - Unauthorized")
+                    flash("error", "Invalid request.")
+                    return res.status(403).send("Forrbidden")
+                }
+                else {
+                    console.log("found and authorized")
+                    return res.render("editor", { author: req.user, article: article })
+                }
             }
         }).catch(err => {
             return next(err)
         })
-    } else {
-        res.render("editor", { author: req.user, article: {} })
     }
 }
 

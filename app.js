@@ -8,10 +8,7 @@ const MongoStore = require("connect-mongodb-session")(session)
 require("./app_server/models/db");
 const indexRouter = require("./app_server/routes/index");
 const authRouter = require("./app_server/routes/auth")
-const { use } = require("marked");
 const { User } = require("./app_server/models/user");
-const { decodeBase64 } = require("bcryptjs");
-const { Mongoose } = require("mongoose");
 
 
 const app = express();
