@@ -61,15 +61,40 @@ app.use((req, res, next) => {
 })
 
 // register routes
-app.use(indexRouter);
 app.use(authRouter)
-
+app.use(indexRouter)
 
 
 // error handling
-app.use((err, req, res, next) => {
-    console.log(err)
-    res.send("smth went wrong.")
+app.use((req, res, next) => {
+    next({ status: 404 })
+})
+
+// error object {status: Number, ...}
+app.use((error, req, res, next) => {
+    console.error("Error Handler Middleware", error)
+    switch (error.status) {
+        case 404: {
+            error.userMessage = "Resource not found. Please check the URL for typos."
+            error.imgSrc = "/assest/404.svg"
+            res.status(404)
+            break
+        }
+        case 403: {
+            error.userMessage = "Sorry, You don't have the permission to access this resource."
+            error.imgSrc = "/assest/403.svg"
+            res.status(403)
+            break
+        }
+
+        default: {
+            error.userMessage = "Sorry something went wrong. We are working on it."
+            error.imgSrc = "/assest/500.svg"
+            res.status(500)
+        }
+    }
+
+    return res.render("error", { error })
 })
 
 const PORT = process.env.PORT || 3000

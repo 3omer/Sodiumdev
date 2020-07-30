@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/atom-one-dark-reasonable.min.css" integrity="sha256-fWFre4K4x/Eo4mgbtbZOyjce569zzVNBAJSfzEXzqDo=" crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/atom-one-dark-reasonable.min.css"
+        integrity="sha256-fWFre4K4x/Eo4mgbtbZOyjce569zzVNBAJSfzEXzqDo=" crossorigin="anonymous" />
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/custom.css">
     <title>Sodium</title>
@@ -21,18 +23,25 @@
             <div class="collapse navbar-collapse d-flex justify-content-end" id="navbar">
                 <ul class="navbar-nav">
                     <% if (locals.user) { %>
-                        <li class="nav-item mx-2">
-                            <a class=" btn btn-sm btn-light" href="/logout">Logout</a>
-                        </li>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-fluid rounded" src="<%= locals.user.avatar %> " alt="" width="25px">
+                                <a class="text-white" href="/users/me">
+                                    <%= locals.user.username %>
+                                </a>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="/dashboard/editor">New Article</a>
+                              <a class="dropdown-item" href="/users/me">Account</a>
+                              <a class="dropdown-item" href="/logout">Logout</a>
+                            </div>
+                          </div>
                     <% } else { %>
-                        <li class="nav-item mx-2">
-                            <a class=" btn btn-sm btn-light" href="/login">Login</a>
-                        </li>
+                    <li class="nav-item mx-2">
+                        <a class=" btn btn-sm btn-light" href="/login">Login</a>
+                    </li>
                     <% } %>
 
-                    <li class="nav-item">
-                        <a class="btn btn-sm btn-outline-light text-white disabled" href="/about">About</a>
-                    </li>
                 </ul>
             </div>
         </nav>

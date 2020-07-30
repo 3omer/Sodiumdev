@@ -26,7 +26,7 @@ const editor = (req, res, next) => {
                 if (!article.isOwner(req.user.id)) {
                     console.log(" found - Unauthorized")
                     flash("error", "Invalid request.")
-                    return res.status(403).send("Forrbidden")
+                    return next({ status: 403 })
                 }
                 else {
                     console.log("found and authorized")
