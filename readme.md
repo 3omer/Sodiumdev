@@ -7,3 +7,14 @@ In this project I implemented the following features:
 - Responsive UI: [Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
 
 > Live Demo: [Sodiumdev](https://Sodiumdev.herokuapp.com)
+
+
+## ENV Variables:
+Name                            Describtion 
+PORT                            Server listening port
+SECRET                          
+MONGO_URI                       Mongodb connection URI
+
+SESSION_STORE_URI               Mongo URI for sessions data. MUST include DB name
+SESSION_STORE_COLLECTION        Collection name
+

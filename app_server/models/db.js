@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
+const config = require("../../config/config")
 
-const dbURI = process.env.MONGODB_URI || "mongodb://localhost/sodium"
+const dbURI = config.db.uri
 
 mongoose.connect(dbURI,
     {
@@ -8,7 +9,7 @@ mongoose.connect(dbURI,
         useUnifiedTopology: true,
         useCreateIndex: true
     })
-    
+
 mongoose.connection.on("connected", () => {
     console.log(`Mongoose connected to ${dbURI}`)
 })

@@ -24,9 +24,9 @@
                 <ul class="navbar-nav">
                     <% if (locals.user) { %>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="img-fluid rounded" src="<%= locals.user.avatar %> " alt="" width="25px">
-                                <a class="text-white" href="/users/me">
+                                <a class="text-dark" href="/users/me">
                                     <%= locals.user.username %>
                                 </a>
                             </button>

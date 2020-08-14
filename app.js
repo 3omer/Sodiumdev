@@ -1,21 +1,21 @@
 const path = require("path");
 const morgan = require("morgan");
+const config = require("./config/config")
 const express = require("express");
 const session = require("express-session")
-const passport = require("passport")
 const flash = require('express-flash');
 const MongoStore = require("connect-mongodb-session")(session)
+const passport = require("passport")
 require("./app_server/models/db");
+require("./config/passport")
 const indexRouter = require("./app_server/routes/index");
 const authRouter = require("./app_server/routes/auth")
-const { User } = require("./app_server/models/user");
 
 
 const app = express();
 
 const logger = morgan("dev");
 app.use(logger);
-
 app.use(express.urlencoded({ extended: false }))
 
 // config view engine
@@ -23,38 +23,24 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.resolve(__dirname, "app_server", "views"));
 app.set("view engine", "ejs");
 
-//TODO : read store config from env
-// config passport
 const store = new MongoStore({
-    uri: process.env.MONGODB_URI,
-    databaseName: "sodiumdev",
-    collection: "sessions"
+    uri: config.sessionStore.uri,
+    collection: config.sessionStore.collection
 })
 store.on("error", console.error)
-
 app.use(session({
     store: store,
-    secret: "deepSecret",
+    secret: config.app.secret,
     resave: true,
     saveUninitialized: false
 }))
 
 app.use(passport.initialize())
 app.use(passport.session())
-passport.serializeUser((user, done) => {
-    done(null, user.id)
-})
-passport.deserializeUser((id, done) => {
-    User.findById(id)
-        .then((user) => {
-            done(null, user)
-        })
-        .catch(error => done(error))
-
-})
-
 app.use(flash())
 
+
+// load user
 app.use((req, res, next) => {
     res.locals.user = req.user
     next()
@@ -97,7 +83,8 @@ app.use((error, req, res, next) => {
     return res.render("error", { error })
 })
 
-const PORT = process.env.PORT || 3000
+console.log("Env config:", config)
+const PORT = config.app.port
 app.listen(PORT, function () {
     console.log(`Server is Listening on ${PORT}`)
 })
