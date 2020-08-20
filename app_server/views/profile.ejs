@@ -1,0 +1,44 @@
+<%- include ("_header") %>
+<main class="container-fluid p-0">
+    <%- include ("_flash") %>
+    <% if ( articles.length > 0 ) {%>
+    <section class="art-list bg-transparent">
+        <%- include ("_author_widget") %>
+
+        <% articles.forEach(article => { %>
+        <article data-id="<%= article.id %> " class="art-widget bg-white shadow-sm my-2 p-2">
+            <div class="art-widget-title h6">
+                <a class="" href="/blog/<%= article.id %>">
+                    <%= article.title %>
+                </a>
+            </div>
+            <div class="art-widget-options p-2 text-black-50 text-truncate">
+                <% if (isOwner) { %>
+                <div class="d-flex">
+                    <a class="btn btn-sm btn-secondary" href=<%="/dashboard/editor?edit=" + article.id %>>edit</a>
+                    <form method="POST" action=<%="/dashboard/editor/delete/" + article.id %>>
+                        <button class="btn btn-sm btn-danger">delete</button>
+                    </form>
+                </div>
+                <% } %>
+            </div>
+            <div class="art-widget-footer d-flex justify-content-end m-1">
+                <a class="userame small badge badge-pill badge-info" href="">
+                    <%= article.author.username %>
+                </a>
+                <span class="date small badge badge-pill badge-secondary" href="">
+                    <%= article.createdAt.toGMTString() %>
+                </span>
+            </div>
+        </article>
+        <% }) %>
+
+        <% } else { %>
+        <article class="art-widget bg-white shadow-sm m-2 p-2">
+            No articles yet.
+        </article>
+        <% } %>
+    </section>
+
+</main>
+<%- include ("_footer") %>
