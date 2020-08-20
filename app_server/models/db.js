@@ -11,7 +11,9 @@ mongoose.connect(dbURI,
     })
 
 mongoose.connection.on("connected", () => {
-    console.log(`Mongoose connected to ${dbURI}`)
+    console.log('Mongoose connected to: ',
+        mongoose.connection.host,
+        mongoose.connection.name)
 })
 
 mongoose.connection.on("error", (err) => {
@@ -52,4 +54,4 @@ process.on("SIGTERM", () => {
     })
 })
 
-require('./articles');
+require('./user');

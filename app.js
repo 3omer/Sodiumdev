@@ -29,10 +29,11 @@ const store = new MongoStore({
 })
 store.on("error", console.error)
 app.use(session({
+    name:"session",
     store: store,
     secret: config.app.secret,
-    resave: true,
-    saveUninitialized: false
+    resave: false,
+    saveUninitialized: false,  
 }))
 
 app.use(passport.initialize())
@@ -88,3 +89,5 @@ const PORT = config.app.port
 app.listen(PORT, function () {
     console.log(`Server is Listening on ${PORT}`)
 })
+
+module.exports = app

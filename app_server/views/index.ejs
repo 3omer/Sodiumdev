@@ -15,7 +15,8 @@
                 <%= article.describtion %>
             </div>
             <div class="art-widget-footer d-flex justify-content-end m-1">
-                <a class="userame small badge badge-pill badge-info" href="">
+                <a class="userame small badge badge-pill badge-info"
+                 href=<%="/users/" + article.author.id %>>
                     <%= article.author.username %>
                 </a>
                 <span class="date small badge badge-pill badge-secondary" href="">

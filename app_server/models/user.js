@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs")
-
-//TODO: validation
+const articleSchema = require("./articles").articleScehma
+const MongooseError = require("./helpers")
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 8
     },
     avatar: {
         type: String,
@@ -30,6 +31,13 @@ userSchema.pre("save", async function () {
     const user = this
     if (user.isModified("password")) {
         user.password = await bcrypt.hash(user.password, 12)
+    }
+    
+    if (user.isModified("email")) {
+        const duplicate = await User.findOne({ email: this.email})
+        if (duplicate){
+            throw new MongooseError.DuplicateEmailError("This Email is already registered.")
+        }
     }
 })
 
