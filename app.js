@@ -57,9 +57,15 @@ app.use((req, res, next) => {
     next({ status: 404 })
 })
 
-// error object {status: Number, ...}
+// log errors then modify to display understandable enduser message
+// error object: {status: Number, userMessage, ..[]}
 app.use((error, req, res, next) => {
+    // log the error before modifing
     console.error("Error Handler Middleware", error)
+    // if the error object is just a status code
+    if (Number.isInteger(error)) {
+        error = { status: error }
+    }
     switch (error.status) {
         case 404: {
             error.userMessage = "Resource not found. Please check the URL for typos."
@@ -74,10 +80,12 @@ app.use((error, req, res, next) => {
             break
         }
 
+        case 500:
         default: {
             error.userMessage = "Sorry something went wrong. We are working on it."
             error.imgSrc = "/assest/500.svg"
             res.status(500)
+            break
         }
     }
 
