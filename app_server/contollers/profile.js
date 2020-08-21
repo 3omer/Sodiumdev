@@ -12,7 +12,7 @@ const profile = async (req, res, next) => {
         const articles = await Article.find({ "author.id": user.id })
         if (!user) return next(404)
         // is the viewr the owner of the profile -> true: display mangment options
-        const isOwner = req.user.id === id
+        const isOwner = req.user ? req.user.id === id : false
         return res.render("profile", { author: user, articles: articles, isOwner: isOwner })
     } catch (error) {
         console.error(error)
