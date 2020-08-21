@@ -34,11 +34,11 @@ const prod = {
         secret: process.env.SECRET
     },
     db: {
-        uri: process.env.MONGO_URI
+        uri: process.env.MONGODB_URI
     },
     sessionStore: {
         uri: process.env.SESSION_STORE_URI,
-        collection: process.env.SESSION_STORE_COLLECTION
+        collection: process.env.SESSION_STORE_COLLECTION || "sessions"
     }
 }
 
