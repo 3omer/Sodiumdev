@@ -18,10 +18,7 @@ const logger = morgan("dev");
 app.use(logger);
 app.use(express.urlencoded({ extended: false }))
 
-// config view engine
-app.use(express.static(path.join(__dirname, "public")));
-app.set("views", path.resolve(__dirname, "app_server", "views"));
-app.set("view engine", "ejs");
+
 
 const store = new MongoStore({
     uri: config.sessionStore.uri,
@@ -41,6 +38,12 @@ app.use(passport.session())
 app.use(flash())
 
 
+// config view engine
+app.use(express.static(path.join(__dirname, "public")));
+app.set("views", path.resolve(__dirname, "app_server", "views"));
+app.set("view engine", "ejs");
+
+
 // load user
 app.use((req, res, next) => {
     res.locals.user = req.user
@@ -57,8 +60,8 @@ app.use((req, res, next) => {
     next({ status: 404 })
 })
 
-// log errors then modify to display understandable enduser message
-// error object: {status: Number, userMessage, ..[]}
+// modify to display user friendly message
+// every error object sould contain : {status: Number, userMessage, ..[]}
 app.use((error, req, res, next) => {
     // log the error before modifing
     console.error("Error Handler Middleware", error)

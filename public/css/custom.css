@@ -8,6 +8,10 @@ header .btn {
     padding-right: 1em;
 }
 
+body {
+    height: 100vh;
+}
+
 .btn-light {
     color: #1D3557 !important;
 }

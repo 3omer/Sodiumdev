@@ -3,7 +3,6 @@ const { User } = require("../models/user")
 const MongooseError = require("../models/helpers")
 
 
-
 const register = (req, res) => {
     res.render("register")
 }
