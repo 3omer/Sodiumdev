@@ -6,17 +6,17 @@
         <%- include ("_author_widget") %>
 
         <% articles.forEach(article => { %>
-        <article data-id="<%= article.id %> " class="art-widget bg-white shadow-sm my-2 p-2">
+        <article data-id="<%= article.blogID %> " class="art-widget bg-white shadow-sm my-2 p-2">
             <div class="art-widget-title h6">
-                <a class="" href="/blog/<%= article.id %>">
+                <a class="" href="/blog/<%= article.blogID %>">
                     <%= article.title %>
                 </a>
             </div>
             <div class="art-widget-options p-2 text-black-50 text-truncate">
                 <% if (isOwner) { %>
                 <div class="d-flex">
-                    <a class="btn btn-sm btn-secondary" href=<%="/dashboard/editor?edit=" + article.id %>>edit</a>
-                    <form method="POST" action=<%="/dashboard/editor/delete/" + article.id %>>
+                    <a class="btn btn-sm btn-secondary" href=<%="/dashboard/editor?edit=" + article.blogID %>>edit</a>
+                    <form method="POST" action=<%="/dashboard/editor/delete/" + article.blogID %>>
                         <button class="btn btn-sm btn-danger">delete</button>
                     </form>
                 </div>

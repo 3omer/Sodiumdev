@@ -18,7 +18,7 @@ const index = (req, res, next) => {
 }
 
 const article = (req, res, next) => {
-    Article.findOne({_id: req.params.id }).then(article => {
+    Article.findOne({ blogID: req.params.id }).then (article => {
         // console.log(article)
         article.content = marked(article.content)
         res.render("article", { article: article })

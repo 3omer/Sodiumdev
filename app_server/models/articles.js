@@ -2,7 +2,15 @@ const mongoose = require("mongoose")
 const { userSchema } = require("./user")
 // const { userSchema } = require("./user")
 // todo: add tags, likes(claps, loved), slug
+const shortid = require("shortid")
 const articleScehma = new mongoose.Schema({
+    
+    blogID: {
+        type: String,
+        unique: true,
+        default: shortid.generate
+    },
+
     author: {
         _id: mongoose.Types.ObjectId,
         id: String,

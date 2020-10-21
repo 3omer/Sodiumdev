@@ -4,10 +4,10 @@
     <% if ( articles.length > 0 ) {%>
     <section class="art-list bg-transparent">
         <% articles.forEach(article => { %>
-        <article data-id="<%= article.id %> " 
+        <article data-id="<%= article.blogID %> " 
                 class="art-widget bg-white shadow-sm my-2 p-2">
             <div class="art-widget-title h6">
-                <a class="" href="/blog/<%= article.id %>">
+                <a class="" href="/blog/<%= article.blogID %>">
                     <%= article.title %>
                 </a>
             </div>

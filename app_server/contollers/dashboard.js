@@ -21,7 +21,7 @@ const editor = (req, res, next) => {
         return res.render("editor", { author: req.user, article: {} })
     } else {
         // fetch by art id then check if logged user is the autor
-        Article.findOne({ _id: id }).then(article => {
+        Article.findOne({ blogID: id }).then( article => {
             // console.log(article.author.id, req.user.id)
             if (article) {
                 if (!article.isOwner(req.user.id)) {
@@ -50,7 +50,7 @@ const newArticle = async (req, res, next) => {
     try {
         if (id.length) {
             // update
-            await Article.findByIdAndUpdate(id, { title, content }, 
+            await Article.findOneAndUpdate({ blogID: id}, { title, content }, 
                 { useFindAndModify: false })
                 res.redirect("/me")
                 
@@ -59,7 +59,7 @@ const newArticle = async (req, res, next) => {
             article = new Article({ title: title, author: author, content: content })
             await article.save()
         }
-        res.redirect(`/blog/${article.id}`)
+        res.redirect(`/blog/${article.blogID}`)
     } catch (error) {
         return next(error)
     }
@@ -70,7 +70,7 @@ const updateArticle = async (req, res, next) => {
     const id = req.params.id
     const {content, title } = req.body
     try {
-        const article = await Article.findById(id)
+        const article = await Article.findOne({ blogID: id})
         if (!article) return next(404)
         if (article.author.id !== req.user.id) return next(403)
         article.content = content
@@ -86,7 +86,7 @@ const updateArticle = async (req, res, next) => {
 const deleteArticle = async (req, res, next) => {
 try {
     const id = req.params.id
-    await Article.findByIdAndDelete(id)
+    await Article.findOneAndDelete({blogID: id})
     res.redirect("/me")
 } catch (error) {
     console.error(error)
