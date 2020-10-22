@@ -10,7 +10,7 @@ const { Mongoose } = require("mongoose");
 
 const index = (req, res, next) => {
     
-    Article.find({}).then((articles) => {
+    Article.find({}).populate("author").then((articles) => {
         res.render("index", { articles });
     }).catch(error => {
         next(error)
@@ -18,7 +18,7 @@ const index = (req, res, next) => {
 }
 
 const article = (req, res, next) => {
-    Article.findOne({ blogID: req.params.id }).then (article => {
+    Article.findOne({ blogID: req.params.id }).populate("author").then (article => {
         // console.log(article)
         article.content = marked(article.content)
         res.render("article", { article: article })

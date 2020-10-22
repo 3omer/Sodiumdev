@@ -21,7 +21,7 @@ const editor = (req, res, next) => {
         return res.render("editor", { author: req.user, article: {} })
     } else {
         // fetch by art id then check if logged user is the autor
-        Article.findOne({ blogID: id }).then( article => {
+        Article.findOne({ blogID: id }).populate("author").then( article => {
             // console.log(article.author.id, req.user.id)
             if (article) {
                 if (!article.isOwner(req.user.id)) {

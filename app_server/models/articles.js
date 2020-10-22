@@ -11,11 +11,9 @@ const articleScehma = new mongoose.Schema({
         default: shortid.generate
     },
 
-    author: {
-        _id: mongoose.Types.ObjectId,
-        id: String,
-        username: String,
-        email: String
+    author: { 
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "User"
     },
 
     title: {

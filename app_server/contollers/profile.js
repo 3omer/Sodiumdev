@@ -9,7 +9,7 @@ const profile = async (req, res, next) => {
     const id = req.params.id
     try {
         const user = await User.findById(id)
-        const articles = await Article.find({ "author.id": user.id })
+        const articles = await Article.find({ "author": user.id }).populate("author")
         if (!user) return next(404)
         // is the viewr the owner of the profile -> true: display mangment options
         const isOwner = req.user ? req.user.id === id : false
