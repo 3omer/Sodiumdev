@@ -1,5 +1,5 @@
 # Sodiumdev Blog Engine:
-In this project I implemented the following features:
+In this project :
 - Database: [MongooseODM](https://mongoosejs.com).
 - Authentication: Using [passport.js](http://www.passportjs.org/) local strategy and Mongodb as sessions store.
 - Templating: [ejs](https://ejs.co)
