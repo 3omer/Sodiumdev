@@ -1,5 +1,4 @@
-const passport = require("passport")
-const { User } = require("../models/user")
+const User = require("../models/user")
 const MongooseError = require("../models/helpers")
 
 
@@ -31,26 +30,9 @@ const login = (req, res) => {
     res.render("login")
 }
 
-const handleLogin = passport.authenticate('local', {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true,
-    successFlash: "Welcome !",
-})
-
-
 const logOut = (req, res) => {
     req.logout()
     res.redirect("/")
 }
 
-const isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next()
-    } else {
-        return res.redirect(403, "/login")
-    }
-
-}
-
-module.exports = { login, logOut, handleLogin, register, handleRegister, isLoggedIn }
+module.exports = { login, logOut, register, handleRegister }

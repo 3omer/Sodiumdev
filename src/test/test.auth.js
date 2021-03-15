@@ -1,4 +1,4 @@
-const { User } = require("../app_server/models/user");
+const User = require("../models/user");
 const mongoose = require("mongoose")
 const { connectMongo, closeMongo, postForm } = require("./utils")
 const chai = require("chai")
@@ -18,8 +18,6 @@ describe("Authintication", async () => {
         await mongoose.connection.collection("sessions").deleteMany({})
     }
 
-
-
     describe("Register User", async () => {
         before(async () => {
             // clean
@@ -32,7 +30,7 @@ describe("Authintication", async () => {
             await cleanSessions()
         })
 
-        it("GET /Register page successfuly", async () => {
+        it("renders register page successfuly", async () => {
             const res = await supertest(app)
                 .get("/register")
             expect(res.statusCode).to.eq(200)
@@ -40,7 +38,7 @@ describe("Authintication", async () => {
 
         })
 
-        it("POST valid data", async () => {
+        it("registers a user when posting valid data", async () => {
             const form = {
                 username: "user1",
                 email: "user1@email.com",
@@ -59,7 +57,7 @@ describe("Authintication", async () => {
             expect(user.password).lengthOf(60)
         })
 
-        it("fails on short username", async () => {
+        it("fails when username < 4", async () => {
             const res = await registerUser(
                 {
                     username: "us",
@@ -75,7 +73,7 @@ describe("Authintication", async () => {
 
         })
 
-        it("fails on short password ", async () => {
+        it("fails when password < 8 ", async () => {
             const res = await registerUser({
                 username: "usertest",
                 email: "user@test.com",
@@ -126,33 +124,25 @@ describe("Authintication", async () => {
 
 
         before(async () => {
+            await User.deleteMany({})
+            await cleanSessions()
             // register two users
-
-            try {
-                await User.deleteMany({})
-                await cleanSessions()
-
-                await new User(validUser1).save()
-                await new User(validUser2).save()
-            } catch (error) {
-                console.log(error)
-                process.exit(1)
-            }
+            await new User(validUser1).save()
+            await new User(validUser2).save()
         })
 
         after(async () => {
             await User.deleteMany({})
             await cleanSessions()
-        }
-        )
+        })
 
-        it("GET login page", async () => {
+        it("renders login page", async () => {
             const res = await supertest(app).get("/login")
             expect(res.statusCode).to.eq(200)
             expect(res.text).to.contain("form")
         })
 
-        it("Users exists", async () => {
+        it("ensures there is already two users", async () => {
             const count = await User.find({}).countDocuments()
             expect(count).to.eq(2)
         })
@@ -170,18 +160,17 @@ describe("Authintication", async () => {
             expect(cookies[0]).is.string
         })
 
-        it("fails to login a user with correct email wrong pwd", async () => {
+        it("fails to login a user with correct email/wrong pwd", async () => {
             const res = await loginUser({
                 email: validUser1.email,
                 password: "thisiswrong"
             })
             expect(res.text).to.contain("/login")
         })
-
     })
 
     describe("/dashboard", async () => {
-        it("forbid unauthorizd users", async () => {
+        it("forbids unauthorizd users", async () => {
             const res = await supertest(app).get("/dashboard")
             expect(res.statusCode).to.eq(403)
         })

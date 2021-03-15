@@ -5,8 +5,8 @@ controllers of:
 */
 
 const marked = require("marked")
-const { Article } = require('../models/articles');
-const { Mongoose } = require("mongoose");
+const Article = require('../models/articles')
+const logger = require("../utils/logger")
 
 const index = (req, res, next) => {
     
@@ -19,7 +19,7 @@ const index = (req, res, next) => {
 
 const article = (req, res, next) => {
     Article.findOne({ blogID: req.params.id }).populate("author").then (article => {
-        // console.log(article)
+        // logger.info(article)
         article.content = marked(article.content)
         res.render("article", { article: article })
     }).catch(err => next(err))

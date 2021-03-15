@@ -1,5 +1,5 @@
-const User = require("../models/user").User
-const Article = require("../models/articles").Article
+const User = require("../models/user")
+const Article = require("../models/articles")
 
 const me = async (req, res, next) => {
     res.redirect(`/users/${req.user.id}`)

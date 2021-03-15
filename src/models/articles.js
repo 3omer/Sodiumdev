@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
-const { userSchema } = require("./user")
-// const { userSchema } = require("./user")
+
 // todo: add tags, likes(claps, loved), slug
 const shortid = require("shortid")
 const articleScehma = new mongoose.Schema({
@@ -48,4 +47,4 @@ articleScehma.methods.isOwner = function(id) {
 }
 
 const Article = mongoose.model("Article", articleScehma)
-module.exports = { Article, articleScehma }
+module.exports = Article

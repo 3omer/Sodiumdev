@@ -2,13 +2,13 @@
 controllers of:
 - admin dashboard
 */
-const { Article } = require("../models/articles")
+const Article = require("../models/articles")
 const flash = require("express-flash")
-const user = require("../models/user")
+const logger = require("../utils/logger")
 
 // list all author articles
 const dashboard = (req, res) => {
-    console.log(req.method)
+    logger.info(req.method)
     res.send("a page where author review/edit his articles")
 }
 
@@ -17,20 +17,20 @@ const dashboard = (req, res) => {
 const editor = (req, res, next) => {
     const id = req.query["edit"] || ""
     if (!id) {
-        // console.log("new post")
+        // logger.info("new post")
         return res.render("editor", { author: req.user, article: {} })
     } else {
         // fetch by art id then check if logged user is the autor
         Article.findOne({ blogID: id }).populate("author").then( article => {
-            // console.log(article.author.id, req.user.id)
+            // logger.info(article.author.id, req.user.id)
             if (article) {
                 if (!article.isOwner(req.user.id)) {
-                    // console.log(" found - Unauthorized")
+                    // logger.info(" found - Unauthorized")
                     flash("error", "Invalid request.")
                     return next({ status: 403 })
                 }
                 else {
-                    // console.log("found and authorized")
+                    // logger.info("found and authorized")
                     return res.render("editor", { author: req.user, article: article })
                 }
             }
@@ -78,7 +78,7 @@ const updateArticle = async (req, res, next) => {
         await article.save() 
         res.redirect("/me")
     } catch (error) {
-        console.error(error)
+        logger.error(error)
         next(500)
     }
 }
@@ -89,7 +89,7 @@ try {
     await Article.findOneAndDelete({blogID: id})
     res.redirect("/me")
 } catch (error) {
-    console.error(error)
+    logger.error(error)
     next(500)
 }    
 }

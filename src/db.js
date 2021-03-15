@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const config = require("../../config/config")
+const config = require("./utils/config")
+const logger = require("./utils/logger")
 
 const dbURI = config.db.uri
 
@@ -11,23 +12,24 @@ mongoose.connect(dbURI,
     })
 
 mongoose.connection.on("connected", () => {
-    console.log('Mongoose connected to: ',
+    logger.info('Mongoose connected to: ',
         mongoose.connection.host,
         mongoose.connection.name)
 })
 
 mongoose.connection.on("error", (err) => {
-    console.error(`Mongoose connection error: ${err}`)
+    logger.error(`Mongoose connection error: ${err}`)
+    process.exit(1)
 })
 
 mongoose.connection.on("disconnected", () => {
-    console.log("Mongoose disconnected")
+    logger.info("Mongoose disconnected")
 })
 
 const gracefulShutdown = (msg, cb) => {
     mongoose.connection.close()
         .then(() => {
-            console.log(`Mongoose disconnected through: ${msg}`)
+            logger.info(`Mongoose disconnected through: ${msg}`)
             cb()
         })
 }
@@ -54,4 +56,5 @@ process.on("SIGTERM", () => {
     })
 })
 
-require('./user');
+require("./models/user")
+require("./models/articles")

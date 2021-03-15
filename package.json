@@ -1,14 +1,14 @@
 {
   "name": "Sodium",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
   "directories": {
-    "test": "test"
+    "test": "./src/test"
   },
   "scripts": {
-    "test": "mocha --exit",
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "test": "mocha ./src/test --exit",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "Omar M. Osman",
   "license": "ISC",

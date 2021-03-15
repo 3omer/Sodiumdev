@@ -1,6 +1,8 @@
+// Setup passport configuration
+
 const passport = require("passport")
 const mongoose = require("mongoose")
-const User = mongoose.model("User")
+const User = require("../models/user")
 const LocalStrategy = require("passport-local").Strategy
 
 // passport auth config: verify method
@@ -31,5 +33,6 @@ passport.deserializeUser((id, done) => {
             done(null, user)
         })
         .catch(error => done(error))
-
 })
+
+module.exports = passport

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs")
-const articleSchema = require("./articles").articleScehma
 const MongooseError = require("./helpers")
 
 const userSchema = new mongoose.Schema({
@@ -58,4 +57,4 @@ userSchema.methods.verifyPassword = function (password) {
 
 const User = mongoose.model("User", userSchema)
 
-module.exports = { userSchema, User }
+module.exports = User
