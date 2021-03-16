@@ -12,8 +12,8 @@ const injectUserInLocals = (req, res, next) => {
     next()
 }
 
-// modify to display user friendly message
-// every error object sould contain : {status: Number, userMessage, ..[]}
+// map error code to convenient error page with user friendly message
+// from your controllers pass res status code only eg. next(403) or { status: 403 }
 const errorHandler = (error, req, res, next) => {
     // log the error before modifing
     console.error("Error Handler Middleware", error)

@@ -76,7 +76,7 @@ app.get("/users/:id", ctrlProfile.profile)
 
 // unknown endpoint
 app.use((req, res, next) => {
-    next({ status: 404 })
+    next(404)
 })
 
 // handle error

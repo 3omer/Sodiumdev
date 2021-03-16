@@ -27,7 +27,7 @@ const editor = (req, res, next) => {
                 if (!article.isOwner(req.user.id)) {
                     // logger.info(" found - Unauthorized")
                     flash("error", "Invalid request.")
-                    return next({ status: 403 })
+                    return next(403)
                 }
                 else {
                     // logger.info("found and authorized")
