@@ -20,6 +20,9 @@ const index = (req, res, next) => {
 const article = (req, res, next) => {
     Article.findOne({ blogID: req.params.id }).populate("author").then (article => {
         // logger.info(article)
+        // set this blog as seen in user session
+        req.session['seen'] = req.session['seen'] ? req.session['seen'].concat([req.params.id]) : [req.params.id] 
+
         article.content = marked(article.content)
         res.render("article", { article: article })
     }).catch(err => next(err))

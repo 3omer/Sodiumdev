@@ -12,18 +12,29 @@ const ctrlProfile = require("./contollers/profile")
 const ctrlDashboard = require("./contollers/dashboard")
 require("./db")
 
-
 const app = express()
 
-const logger = morgan("dev")
-app.use(logger)
+// serve statics
+app.use(express.static(path.join(__dirname, "public")))
+
+// config view engine
+app.set("views", path.resolve(__dirname, "views"))
+app.set("view engine", "ejs")
+
+// parse req body
 app.use(express.urlencoded({ extended: false }))
+
+const reqLog = morgan("dev")
+app.use(reqLog)
+
+// flash
+app.use(flash())
 
 // session store
 const store = new MongoStore({
     uri: config.sessionStore.uri,
     collection: config.sessionStore.collection
-})
+})    
 store.on("error", console.error)
 app.use(session({
     name:"session",
@@ -31,21 +42,12 @@ app.use(session({
     secret: config.app.secret,
     resave: false,
     saveUninitialized: false,  
-}))
+}))    
 
 // initialize passport midlleware
 const passport = require("./utils/passport")
 app.use(passport.initialize())
 app.use(passport.session())
-
-// flash
-app.use(flash())
-
-// config view engine
-app.use(express.static(path.join(__dirname, "public")))
-app.set("views", path.resolve(__dirname, "views"))
-app.set("view engine", "ejs")
-
 // make user object availble in tempelates
 app.use(middleware.injectUserInLocals)
 
@@ -56,6 +58,7 @@ app.get("/", ctrlMain.index)
 app.get("/register", ctrlAuth.register)
 app.post("/register", ctrlAuth.handleRegister)
 app.get("/login", ctrlAuth.login)
+app.post("/login", ctrlAuth.handleLogin)
 app.get("/logout", ctrlAuth.logOut)
 
 // view article 

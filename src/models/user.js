@@ -43,7 +43,7 @@ userSchema.pre("save", async function () {
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
     if (!user) return null
-
+    
     const isPasswordMatch = await bcrypt.compare(password, user.password)
     if (!isPasswordMatch) {
         return null
@@ -56,5 +56,4 @@ userSchema.methods.verifyPassword = function (password) {
 }
 
 const User = mongoose.model("User", userSchema)
-
 module.exports = User
