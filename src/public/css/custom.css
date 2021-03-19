@@ -12,6 +12,10 @@ body {
     height: 100vh;
 }
 
+main {
+    max-width: 760px !important;
+}
+
 .btn-light {
     color: #1D3557 !important;
 }

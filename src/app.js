@@ -63,13 +63,13 @@ app.get("/logout", ctrlAuth.logOut)
 
 // view article 
 app.get("/blog/:id", ctrlMain.article)
+app.post('/blog/:id/comments', middleware.requireAuth ,ctrlMain.newComment)
 
 // author dashboard and blogs editor editor
 app.get("/dashboard", middleware.requireAuth, ctrlDashboard.dashboard)
 app.get("/dashboard/editor", middleware.requireAuth, ctrlDashboard.editor)
 app.post("/dashboard/editor", middleware.requireAuth, ctrlDashboard.newArticle)
 app.post("/dashboard/editor/delete/:id", middleware.requireAuth, ctrlDashboard.deleteArticle)
-
 // profile
 app.get("/me", middleware.requireAuth, ctrlProfile.me)
 app.get("/users/:id", ctrlProfile.profile)

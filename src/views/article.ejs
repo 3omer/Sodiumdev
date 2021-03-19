@@ -7,25 +7,55 @@
                     <%= article.title %>
                 </h4>
                 <div class="art-cover text-center my-2">
-                    <%# art.cover  %> 
+                    <%# art.cover  %>
                     <img class="img-fluid" src="/assest/cover_ph.png" alt="" height="220px">
                 </div>
-                <%# depencies for widget %> 
-                <%- include ("_article_author_widget") %> 
+                <%# depencies for widget %>
+                <%- include ("_article_author_widget") %>
             </div>
             <div id="articleBody" class="art-body bg-white my-2 p-2">
                 <%- article.content %>
             </div>
         </article>
     </section>
-
+    <hr>
     <% if (article.tags.length) { %>
-    <div class="tags-list my-2 p-2 bg-white shadow-sm">
-        <span class="m-3">Tags</span>
-        <% article.tags.forEach(tag => { %>
-        <a class="tag badge badge-pill" href=""><%= tag %></a>
+        <div class="tags-list my-2 p-2 bg-white shadow-sm">
+            <span class="m-3">Tags</span>
+            <% article.tags.forEach(tag => { %>
+            <a class="tag badge badge-pill" href=""><%= tag %></a>
+            <% }) %>
+        </div>
+        <% } %>
+        <hr>
+    <section class="comments ">
+        <h3>Comments(n)</h3>
+        <% if (comments.length) { %>
+        <% comments.forEach(comment => { %>
+        <div class="comment bg-white my-1 p-2 w-75">
+            <div class="text-muted">
+                <span>
+                    By: <%= comment.author.username %>
+                </span>
+                <span class="float-right">
+                     <%= comment.createdAt.toLocaleString() %>
+                </span>
+            </div>
+            <div>
+                <%= comment.content%>
+            </div>
+        </div>
         <% }) %>
-    </div>
-    <% } %>
+        <% } %>
+    </section>
+    <section class="w-75">
+        <form action="/blog/<%= article.blogID %>/comments" method="POST">
+            <div class="form-group p-2">
+                <label for="comment">Comment:</label>
+                <textarea class="form-control" name="comment" id="comment" cols="30" rows="5"></textarea>
+                <button type="submit" class="btn bg-secondary text-white my-1 p-1">comment</button>
+            </div>
+        </form>
+    </section>
 </main>
 <%- include ("_footer") %>

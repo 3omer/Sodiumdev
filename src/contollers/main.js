@@ -6,10 +6,11 @@ controllers of:
 
 const marked = require("marked")
 const Article = require('../models/articles')
+const Comment = require('../models/comments')
 const logger = require("../utils/logger")
 
 const index = (req, res, next) => {
-    
+
     Article.find({}).populate("author").then((articles) => {
         res.render("index", { articles });
     }).catch(error => {
@@ -17,15 +18,32 @@ const index = (req, res, next) => {
     })
 }
 
-const article = (req, res, next) => {
-    Article.findOne({ blogID: req.params.id }).populate("author").then (article => {
-        // logger.info(article)
+const article = async (req, res, next) => {
+    try {
+
+        const article = await Article.findOne({ blogID: req.params.id }).populate("author")
+        if(!article) return next(404)
         // set this blog as seen in user session
-        req.session['seen'] = req.session['seen'] ? req.session['seen'].concat([req.params.id]) : [req.params.id] 
+        req.session['seen'] = req.session['seen'] ? req.session['seen'].concat([req.params.id]) : [req.params.id]
 
         article.content = marked(article.content)
-        res.render("article", { article: article })
-    }).catch(err => next(err))
+        const comments = await Comment.find({ article: article }).populate('author')
+        res.render("article", { article, comments })
+    }
+    catch (err) {
+        next(err)
+    }
 }
 
-module.exports = { index, article }
+const newComment = async (req, res, next) => {
+    const blogID = req.params['id']
+    console.log(blogID);
+
+    const { comment } = req.body
+    const article = await Article.findOne({ blogID: blogID })
+    const newComment = new Comment({ content: comment, author: req.user, article: article })
+    await newComment.save()
+    res.status(201).redirect(`/blog/${blogID}`)
+}
+
+module.exports = { index, article, newComment }
