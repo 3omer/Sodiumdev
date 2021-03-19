@@ -20,13 +20,12 @@ const closeMongo = async () => {
     console.log("db connection closed")
 }
 
-async function postForm(app, url, form) {
-    return await supertest(app)
+async function postForm(request, url, form) {
+    return await request
         .post(url)
         .set("Content-Type", "application/x-www-form-urlencoded")
         .send(form)
         .redirects(1)
 }
-
 
 module.exports = { connectMongo, closeMongo, postForm }

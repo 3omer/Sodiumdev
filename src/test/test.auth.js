@@ -9,9 +9,9 @@ const app = require("../app")
 
 
 describe("Authintication", async () => {
-
+    const request = supertest.agent(app)
     async function registerUser(user) {
-        return await postForm(app, "/register", user)
+        return await postForm(request, "/register", user)
     }
 
     async function cleanSessions() {
@@ -106,9 +106,6 @@ describe("Authintication", async () => {
 
     describe("Login", async () => {
 
-        async function loginUser(user) {
-            return await postForm(app, "/login", user)
-        }
         const validUser1 = {
             username: "user1",
             password: "12345678",
@@ -151,20 +148,18 @@ describe("Authintication", async () => {
         // for some reason even if redirects is enabled :(
         it("login a valid user succefully", async () => {
             let cookies
-            const res = await loginUser({
-                email: validUser1.email,
-                password: validUser1.password
-            })
+            const res = await postForm(supertest(app), '/login', { email: validUser1.email, password: validUser1.password })
             cookies = res.headers["set-cookie"]
             expect(res.statusCode).to.eq(200)
             expect(cookies[0]).is.string
         })
 
         it("fails to login a user with correct email/wrong pwd", async () => {
-            const res = await loginUser({
+            const res = await postForm(supertest(app), '/login', {
                 email: validUser1.email,
                 password: "thisiswrong"
             })
+
             expect(res.text).to.contain("/login")
         })
     })
