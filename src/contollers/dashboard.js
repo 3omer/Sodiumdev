@@ -25,14 +25,17 @@ const editor = (req, res, next) => {
             // logger.info(article.author.id, req.user.id)
             if (article) {
                 if (!article.isOwner(req.user.id)) {
-                    // logger.info(" found - Unauthorized")
+                    logger.info(" found - Unauthorized")
                     flash("error", "Invalid request.")
                     return next(403)
                 }
                 else {
-                    // logger.info("found and authorized")
+                    logger.info("found and authorized")
                     return res.render("editor", { author: req.user, article: article })
                 }
+            }
+            else {
+                next(404)
             }
         }).catch(err => {
             return next(err)
@@ -48,7 +51,7 @@ const newArticle = async (req, res, next) => {
     const author = req.user
     var article
     try {
-        if (id.length) {
+        if (id) {
             // update
             await Article.findOneAndUpdate({ blogID: id}, { title, content }, 
                 { useFindAndModify: false })
