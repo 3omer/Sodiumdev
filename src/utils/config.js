@@ -11,6 +11,10 @@ const dev = {
     sessionStore: {
         uri: "mongodb://localhost/sodiumdev",
         collection: "sessions"
+    },
+    redis: {
+        host: 'localhost',
+        port: 6379
     }
 }
 
