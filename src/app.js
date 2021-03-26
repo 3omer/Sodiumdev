@@ -1,11 +1,12 @@
 const path = require("path")
 const morgan = require("morgan")
-const config = require("./utils/config")
 const express = require("express")
 const session = require("express-session")
+const redisClient = require('./redis')
+const connectRedis = require('connect-redis')
 const flash = require('express-flash')
-const MongoStore = require("connect-mongodb-session")(session)
 const middleware = require("./utils/middleware")
+const config = require("./utils/config")
 const ctrlAuth = require("./controllers/auth")
 const ctrlMain = require("./controllers/main")
 const ctrlProfile = require("./controllers/profile")
@@ -30,15 +31,12 @@ app.use(reqLog)
 // flash
 app.use(flash())
 
-// session store
-const store = new MongoStore({
-    uri: config.sessionStore.uri,
-    collection: config.sessionStore.collection
-})    
-store.on("error", console.error)
+// intializing redis session store
+const RedisStore = connectRedis(session)
+
 app.use(session({
     name:"session",
-    store: store,
+    store: new RedisStore({ client: redisClient }),
     secret: config.app.secret,
     resave: false,
     saveUninitialized: false,  
