@@ -7,6 +7,7 @@ controllers of:
 const marked = require("marked")
 const Article = require('../models/articles')
 const Comment = require('../models/comments')
+const access = require('../models/access')
 const logger = require("../utils/logger")
 
 const index = (req, res, next) => {
@@ -21,7 +22,7 @@ const index = (req, res, next) => {
 const article = async (req, res, next) => {
     try {
 
-        const article = await Article.findOne({ blogID: req.params.id }).populate("author")
+        const article = await access.getArticle(req.params.id)
         if(!article) return next(404)
         // set this blog as seen in user session
         req.session['seen'] = req.session['seen'] ? req.session['seen'].concat([req.params.id]) : [req.params.id]
