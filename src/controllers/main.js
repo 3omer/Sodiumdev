@@ -12,7 +12,7 @@ const logger = require("../utils/logger")
 
 const index = (req, res, next) => {
 
-    Article.find({}).populate("author").then((articles) => {
+    access.recentArticles().then((articles) => {
         res.render("index", { articles });
     }).catch(error => {
         next(error)
