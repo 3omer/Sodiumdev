@@ -30,7 +30,7 @@ const article = async (req, res, next) => {
 
     art.content = marked(art.content)
     const comments = await Comment.find({ art }).populate('author')
-    return res.render('article', { art, comments })
+    return res.render('article', { article: art, comments })
   } catch (err) {
     next(err)
   }
