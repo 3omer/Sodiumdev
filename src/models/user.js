@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const MongooseError = require('./helpers')
@@ -32,7 +33,7 @@ userSchema.pre('save', async function () {
   }
 
   if (user.isModified('email')) {
-    const duplicate = await User.findOne({ email: this.email })
+    const duplicate = await mongoose.model('User').findOne({ email: this.email })
     if (duplicate) {
       throw new MongooseError.DuplicateEmailError('This Email is already registered.')
     }
@@ -40,7 +41,7 @@ userSchema.pre('save', async function () {
 })
 
 userSchema.statics.findByCredentials = async (email, password) => {
-  const user = await User.findOne({ email })
+  const user = await mongoose.model('User').findOne({ email })
   if (!user) return null
 
   const isPasswordMatch = await bcrypt.compare(password, user.password)

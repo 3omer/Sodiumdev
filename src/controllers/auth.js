@@ -30,7 +30,7 @@ const handleRegister = async (req, res) => {
 
 const login = (req, res) => {
   if (req.isAuthenticated()) return res.redirect('/')
-  res.render('login')
+  return res.render('login')
 }
 
 const handleLogin = passport.authenticate('local', {

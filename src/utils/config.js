@@ -48,7 +48,7 @@ const prod = {
 
 const config = {
   development: dev,
-  test: test,
+  test,
   production: prod,
 }
 

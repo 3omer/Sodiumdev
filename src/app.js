@@ -2,9 +2,9 @@ const path = require('path')
 const morgan = require('morgan')
 const express = require('express')
 const session = require('express-session')
-const redisClient = require('./redis')
 const connectRedis = require('connect-redis')
 const flash = require('express-flash')
+const redisClient = require('./redis')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
 const ctrlAuth = require('./controllers/auth')
@@ -48,6 +48,7 @@ app.use(
 
 // initialize passport midlleware
 const passport = require('./utils/passport')
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -72,11 +73,7 @@ app.post('/blog/:id/comments', middleware.requireAuth, ctrlMain.newComment)
 app.get('/dashboard', middleware.requireAuth, ctrlDashboard.dashboard)
 app.get('/dashboard/editor', middleware.requireAuth, ctrlDashboard.editor)
 app.post('/dashboard/editor', middleware.requireAuth, ctrlDashboard.newArticle)
-app.post(
-  '/dashboard/editor/delete/:id',
-  middleware.requireAuth,
-  ctrlDashboard.deleteArticle
-)
+app.post('/dashboard/editor/delete/:id', middleware.requireAuth, ctrlDashboard.deleteArticle)
 
 // profile
 app.get('/me', middleware.requireAuth, ctrlProfile.me)

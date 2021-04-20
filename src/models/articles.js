@@ -1,7 +1,8 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose')
-const Comment = require('./comments')
-// todo: add tags, likes(claps, loved), slug
 const shortid = require('shortid')
+
+// todo: add tags, likes(claps, loved), slug
 const articleScehma = new mongoose.Schema({
   blogID: {
     type: String,
@@ -40,6 +41,7 @@ const articleScehma = new mongoose.Schema({
 })
 
 articleScehma.pre('save', function () {
+  // eslint-disable-next-line no-underscore-dangle
   this.author.id = String(this.author._id)
 })
 

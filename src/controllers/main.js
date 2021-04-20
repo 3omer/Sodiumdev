@@ -8,7 +8,6 @@ const marked = require('marked')
 const Article = require('../models/articles')
 const Comment = require('../models/comments')
 const access = require('../models/access')
-const logger = require('../utils/logger')
 
 const index = (req, res, next) => {
   access
@@ -21,31 +20,28 @@ const index = (req, res, next) => {
     })
 }
 
+// eslint-disable-next-line consistent-return
 const article = async (req, res, next) => {
   try {
-    const article = await access.getArticle(req.params.id)
-    if (!article) return next(404)
+    const art = await access.getArticle(req.params.id)
+    if (!art) return next(404)
     // set this blog as seen in user session
-    req.session['seen'] = req.session['seen']
-      ? req.session['seen'].concat([req.params.id])
-      : [req.params.id]
+    // req.session.seen = req.session.seen ? req.session.seen.concat([req.params.id]) : [req.params.id]
 
-    article.content = marked(article.content)
-    const comments = await Comment.find({ article: article }).populate('author')
-    res.render('article', { article, comments })
+    art.content = marked(art.content)
+    const comments = await Comment.find({ art }).populate('author')
+    return res.render('article', { art, comments })
   } catch (err) {
     next(err)
   }
 }
 
-const newComment = async (req, res, next) => {
-  const blogID = req.params['id']
-  console.log(blogID)
-
+const newComment = async (req, res) => {
+  const blogID = req.params.id
   const { comment } = req.body
-  const article = await Article.findOne({ blogID: blogID })
-  const newComment = new Comment({ content: comment, author: req.user, article: article })
-  await newComment.save()
+  const art = await Article.findOne({ blogID })
+  const newCom = new Comment({ content: comment, author: req.user, art })
+  await newCom.save()
   res.status(201).redirect(`/blog/${blogID}`)
 }
 

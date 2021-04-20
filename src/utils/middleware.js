@@ -1,9 +1,10 @@
+const logger = require('./logger')
+
 const requireAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next()
-  } else {
-    return res.redirect(403, '/login')
   }
+  return res.redirect(403, '/login')
 }
 
 // load user
@@ -14,12 +15,14 @@ const injectUserInLocals = (req, res, next) => {
 
 // map error code to convenient error page with user friendly message
 // from your controllers pass res status code only eg. next(403) or { status: 403 }
-const errorHandler = (error, req, res, next) => {
+// eslint-disable-next-line no-unused-vars
+const errorHandler = (err, req, res, next) => {
   // log the error before modifing
-  console.error('Error Handler Middleware', error)
+  logger.error('Error Handler Middleware', err)
   // if the error object is just a status code
-  if (Number.isInteger(error)) {
-    error = { status: error }
+  let error
+  if (Number.isInteger(err)) {
+    error = { status: err }
   }
   switch (error.status) {
     case 404: {
