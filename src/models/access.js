@@ -4,6 +4,7 @@
 
 const redisClient = require('../redis')
 const Article = require('./articles')
+const User = require('./user')
 const logger = require('../utils/logger')
 
 /**
@@ -50,10 +51,16 @@ const recentArticles = async () => {
       if (err) logger.error(err)
       else if (data.length) {
         logger.info('recentArticles() - cache hit')
-        return resolve(data.map((artilce) => new Article(JSON.parse(artilce))))
+        const articles = data.map((junk) => {
+          const payload = JSON.parse(junk) // payload = { blogID, content, .. , author:{..} }
+          const artilce = new Article(payload)
+          artilce.author = new User(payload.author)
+          return artilce
+        })
+        return resolve(articles)
       }
 
-      const articles = await Article.find({}).populate('author')
+      const articles = await Article.find({}).populate('author').sort({ createdAt: -1 })
       articles.forEach((article) => {
         // use createdAt time as score for sorting
         redisClient.zadd(REDIS_ITEM_KEY, article.createdAt.getTime(), JSON.stringify(article))
