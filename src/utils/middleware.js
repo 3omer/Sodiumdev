@@ -19,11 +19,8 @@ const injectUserInLocals = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   // log the error before modifing
   logger.error('Error Handler Middleware', err)
-  // if the error object is just a status code
-  let error
-  if (Number.isInteger(err)) {
-    error = { status: err }
-  }
+  // if the err object is just number then it's the status code
+  const error = Number.isInteger(err) ? { status: err } : err
   switch (error.status) {
     case 404: {
       error.userMessage = 'Resource not found. Please check the URL for typos.'
