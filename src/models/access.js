@@ -7,28 +7,29 @@ const Article = require('./articles')
 const logger = require('../utils/logger')
 
 /**
- *
+ * read article from cache, or read from database and write it to cache
  * @param {string} blogID
  * @returns {Promise} Article model instance if found
  */
 const getArticle = async (blogID) => {
+  const REDIS_ITEM_KEY = `blogs:${blogID}`
+  const REDIS_TTL = 15 // seconds to expire ITEM
+
   return new Promise((resolve, reject) => {
-    //  get from cache
-    redisClient.hget('blogs', `blog:${blogID}`, async (err, data) => {
+    redisClient.get(REDIS_ITEM_KEY, async (err, data) => {
       if (err) logger.error('getArticle()-', err.message)
       if (data) {
         logger.info('getArtilce() - Cache hit', { blogID })
         data = JSON.parse(data)
-
         return resolve(new Article(data))
       }
 
-      // not found ? fetch from db
+      // not found, fetch from db
       const article = await Article.findOne({ blogID: blogID }).populate('author')
       if (!article) return resolve(null)
 
-      // cache it for next read
-      redisClient.hset('blogs', `blog:${blogID}`, JSON.stringify(article), (err, rep) => {
+      // cache it for next reads
+      redisClient.setex(REDIS_ITEM_KEY, REDIS_TTL, JSON.stringify(article), (err, rep) => {
         if (err) logger.error('getArticle()-', err.message)
         return resolve(article)
       })
@@ -36,9 +37,15 @@ const getArticle = async (blogID) => {
   })
 }
 
+/**
+ * return recently posted articles
+ */
 const recentArticles = async () => {
+  const REDIS_ITEM_KEY = 'blogs:recent'
+  const REDIS_TTL = 15
+
   return new Promise((resolve, reject) => {
-    redisClient.zrange('blogs:recent', 0, -1, async (err, data) => {
+    redisClient.zrevrange('blogs:recent', 0, -1, async (err, data) => {
       if (err) logger.error(err)
       else if (data.length) {
         logger.info('recentArticles() - cache hit')
@@ -47,7 +54,9 @@ const recentArticles = async () => {
 
       const articles = await Article.find({}).populate('author')
       articles.forEach((article) => {
-        redisClient.zadd('blogs:recent', article.createdAt.getTime(), JSON.stringify(article))
+        // use createdAt time as score for sorting
+        redisClient.zadd(REDIS_ITEM_KEY, article.createdAt.getTime(), JSON.stringify(article))
+        redisClient.expire(REDIS_ITEM_KEY, REDIS_TTL)
       })
       resolve(articles)
     })
