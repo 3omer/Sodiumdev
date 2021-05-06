@@ -29,7 +29,7 @@ const article = async (req, res, next) => {
     // req.session.seen = req.session.seen ? req.session.seen.concat([req.params.id]) : [req.params.id]
 
     art.content = marked(art.content)
-    const comments = await Comment.find({ art }).populate('author')
+    const comments = await Comment.find({ article: art }).populate('author')
     return res.render('article', { article: art, comments })
   } catch (err) {
     next(err)
@@ -40,7 +40,7 @@ const newComment = async (req, res) => {
   const blogID = req.params.id
   const { comment } = req.body
   const art = await Article.findOne({ blogID })
-  const newCom = new Comment({ content: comment, author: req.user, art })
+  const newCom = new Comment({ content: comment, author: req.user, article: art })
   await newCom.save()
   res.status(201).redirect(`/blog/${blogID}`)
 }
