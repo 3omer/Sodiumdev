@@ -44,6 +44,10 @@ const prod = {
     uri: process.env.SESSION_STORE_URI,
     collection: process.env.SESSION_STORE_COLLECTION || 'sessions',
   },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+  },
 }
 
 const config = {
