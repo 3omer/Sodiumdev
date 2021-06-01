@@ -8,16 +8,21 @@ const marked = require('marked')
 const Article = require('../models/articles')
 const Comment = require('../models/comments')
 const access = require('../models/access')
+const { incArtilceViews } = require('../utils/helpers')
 
-const index = (req, res, next) => {
-  access
-    .recentArticles()
-    .then((articles) => {
-      res.render('index', { articles })
-    })
-    .catch((error) => {
-      next(error)
-    })
+const index = async (req, res, next) => {
+  const { q } = req.query
+  let articles
+  try {
+    if (!q || q === 'recent') {
+      articles = await access.recentArticles()
+    } else if (q === 'top') {
+      articles = await access.getMostViewedArticles(10)
+    }
+    return res.render('index', { articles })
+  } catch (error) {
+    return next(error)
+  }
 }
 
 // eslint-disable-next-line consistent-return
@@ -25,11 +30,15 @@ const article = async (req, res, next) => {
   try {
     const art = await access.getArticle(req.params.id)
     if (!art) return next(404)
+
     // set this blog as seen in user session
     // req.session.seen = req.session.seen ? req.session.seen.concat([req.params.id]) : [req.params.id]
 
     art.content = marked(art.content)
     const comments = await Comment.find({ article: art }).populate('author')
+
+    // increment this artilce views
+    incArtilceViews(art.id)
     return res.render('article', { article: art, comments })
   } catch (err) {
     next(err)
