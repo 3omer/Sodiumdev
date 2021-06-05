@@ -4,7 +4,6 @@
 const { promisify } = require('util')
 const redisClient = require('../redis')
 const Article = require('./articles')
-const User = require('./user')
 const logger = require('../utils/logger')
 
 /**
@@ -43,32 +42,17 @@ const getArticle = async (blogID) => {
  * return recently posted articles
  */
 const recentArticles = async () => {
-  const REDIS_ITEM_KEY = 'blogs:recent'
-  const REDIS_TTL = 15
-
-  return new Promise((resolve) => {
-    redisClient.zrevrange('blogs:recent', 0, -1, async (err, data) => {
-      if (err) logger.error(err)
-      else if (data.length) {
-        logger.info('recentArticles() - cache hit')
-        const articles = data.map((junk) => {
-          const payload = JSON.parse(junk) // payload = { blogID, content, .. , author:{..} }
-          const artilce = new Article(payload)
-          artilce.author = new User(payload.author)
-          return artilce
-        })
-        return resolve(articles)
-      }
-
-      const articles = await Article.find({}).populate('author').sort({ createdAt: -1 })
-      articles.forEach((article) => {
-        // use createdAt time as score for sorting
-        redisClient.zadd(REDIS_ITEM_KEY, article.createdAt.getTime(), JSON.stringify(article))
-        redisClient.expire(REDIS_ITEM_KEY, REDIS_TTL)
-      })
-      return resolve(articles)
-    })
-  })
+  // get from cache
+  let articles = await redisClient.getRecentArticles()
+  if (articles.length) {
+    // cache hit
+    return recentArticles
+  }
+  // cache is empty
+  // fecth from DB and update cache
+  articles = await Article.find({}).populate('author')
+  await redisClient.setRecentArticles(articles)
+  return articles
 }
 
 const zrevrange = promisify(redisClient.zrevrange).bind(redisClient)
