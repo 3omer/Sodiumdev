@@ -12,30 +12,14 @@ const logger = require('../utils/logger')
  * @returns {Promise} Article model instance if found
  */
 const getArticle = async (blogID) => {
-  const REDIS_ITEM_KEY = `blogs:${blogID}`
-  const REDIS_TTL = 15 // seconds to expire ITEM
-
-  return new Promise((resolve) => {
-    // eslint-disable-next-line consistent-return
-    redisClient.get(REDIS_ITEM_KEY, async (err, rep) => {
-      if (err) logger.error('getArticle()-', err.message)
-      if (rep) {
-        logger.info('getArtilce() - Cache hit', { blogID })
-        const data = JSON.parse(rep)
-        return resolve(new Article(data))
-      }
-
-      // not found, fetch from db
-      const article = await Article.findOne({ blogID }).populate('author')
-      if (!article) return resolve(null)
-
-      // cache it for next reads
-      redisClient.setex(REDIS_ITEM_KEY, REDIS_TTL, JSON.stringify(article), (error) => {
-        if (error) logger.error('getArticle()-', err.message)
-        return resolve(article)
-      })
-    })
-  })
+  // get from cache
+  let article = await redisClient.getArticle(blogID)
+  if (article) return article
+  // fetch db
+  article = await Article.findOne({ blogID }).populate('author')
+  // update cache
+  await redisClient.cacheArticle(article)
+  return article
 }
 
 /**
