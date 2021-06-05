@@ -1,7 +1,7 @@
 /**
  * Manage access to Articles and Comments
  */
-const redisClient = require('../redis')
+const redisStore = require('../redis')
 const Article = require('./articles')
 
 /**
@@ -11,12 +11,12 @@ const Article = require('./articles')
  */
 const getArticle = async (blogID) => {
   // get from cache
-  let article = await redisClient.getArticle(blogID)
+  let article = await redisStore.getArticle(blogID)
   if (article) return article
   // fetch db
   article = await Article.findOne({ blogID }).populate('author')
   // update cache
-  await redisClient.cacheArticle(article)
+  await redisStore.cacheArticle(article)
   return article
 }
 
@@ -25,7 +25,7 @@ const getArticle = async (blogID) => {
  */
 const recentArticles = async () => {
   // get from cache
-  let articles = await redisClient.getRecentArticles()
+  let articles = await redisStore.getRecentArticles()
   if (articles.length) {
     // cache hit
     return articles
@@ -33,7 +33,7 @@ const recentArticles = async () => {
   // cache is empty
   // fecth from DB and update cache
   articles = await Article.find({}).populate('author').sort({ createdAt: -1 })
-  await redisClient.cacheRecentArticles(articles)
+  await redisStore.cacheRecentArticles(articles)
   return articles
 }
 
