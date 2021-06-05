@@ -27,7 +27,7 @@ const getArticle = async (blogID) => {
  */
 const recentArticles = async () => {
   // get from cache
-  let articles = await redisClient.getRecentArticles()
+  let articles = await redisClient.cacheRecentArticles()
   if (articles.length) {
     // cache hit
     return recentArticles

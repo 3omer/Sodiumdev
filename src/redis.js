@@ -43,7 +43,7 @@ const getRecentArticles = async () =>
       logger.error(err)
     })
 
-const setRecentArticles = async (articles) =>
+const cacheRecentArticles = async (articles) =>
   Promise.all(
     articles.map((article) =>
       zaddAsync(RECENT_ARTICLES_KEY, article.createdAt.getTime(), JSON.stringify(article))
@@ -91,7 +91,7 @@ const cacheArticle = (article) => {
 
 module.exports = {
   client,
-  setRecentArticles,
+  cacheRecentArticles,
   getRecentArticles,
   getArticle,
   cacheArticle,
