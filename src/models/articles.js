@@ -52,9 +52,10 @@ articleScehma.methods.isOwner = function (id) {
 // construct a doc instance from JSON string
 articleScehma.statics.fromJson = function (str) {
   const ArticleModel = this.model('Article')
+  const AuthorModel = this.model('User')
   const obj = JSON.parse(str)
   const article = new ArticleModel(obj)
-  article.author = obj.author
+  article.author = new AuthorModel(obj.author)
   return article
 }
 
