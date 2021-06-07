@@ -22,6 +22,9 @@ const zrevrangeAsync = promisify(client.zrevrange).bind(client)
 const zaddAsync = promisify(client.zadd).bind(client)
 const getAsync = promisify(client.get).bind(client)
 const setAsync = promisify(client.set).bind(client)
+const zincrbyAsync = promisify(client.zincrby).bind(client)
+const lrangeAsync = promisify(client.lrange).bind(client)
+const rpushAsync = promisify(client.rpush).bind(client)
 
 /**
  * return posts list ordered by time posted desc
@@ -89,10 +92,65 @@ const cacheArticle = (article) => {
     })
 }
 
+const ARTICLES_VIEWS_KEY = 'blogs:views'
+/**
+ * increament the article views counter by 1 and resolve with the new count number
+ * redis ordered-set mainatain the counts as in the example ['123abcd', 5, ... ]
+ * @param {string} artilceId
+ */
+const incArtilceViews = (artilceId) =>
+  zincrbyAsync(ARTICLES_VIEWS_KEY, 1, artilceId)
+    .then((views) => Promise.resolve(views))
+    .catch((err) => logger.error(err))
+
+/**
+ * articles' ids list ordered by views count desc
+ * @param {number} length length of the returned list
+ * @returns {Array} articles' ids ordered by views DESC
+ */
+const topArticlesIds = async (length) => {
+  const idsList = await zrevrangeAsync(ARTICLES_VIEWS_KEY, 0, length - 1)
+  logger.info('topArticlesIds', idsList)
+  return idsList
+}
+
+const MOST_VIEWED_KEY = 'blogs:mostviewed'
+const MOST_VIEWED_EXP = 10 * 60
+/**
+ * return most viewed articles list from cache
+ * @param {string} length determine the maximum length of the list, default to 10
+ * @returns {Promise} most viewed articles list
+ */
+const getMostViewedArticles = async (length) => {
+  const LENGTH = length || 10
+  let mostViewedArticles = []
+  const articlesJson = await lrangeAsync(MOST_VIEWED_KEY, 0, LENGTH - 1).catch((err) =>
+    logger.error(err)
+  )
+
+  if (articlesJson.length) {
+    logger.info(MOST_VIEWED_KEY, 'cache hit - lenght: ', articlesJson.length)
+    mostViewedArticles = articlesJson.map((articleJson) => Article.fromJson(articleJson))
+  }
+  return mostViewedArticles
+}
+
+const cacheMostViewedArticles = async (articles) => {
+  // cache in oreder
+  const articlesJson = articles.map((article) => JSON.stringify(article))
+  await rpushAsync(MOST_VIEWED_KEY, articlesJson)
+  logger.info(MOST_VIEWED_KEY, ' cache updated')
+  client.expire(MOST_VIEWED_KEY, MOST_VIEWED_EXP)
+}
+
 module.exports = {
   client,
   cacheRecentArticles,
   getRecentArticles,
   getArticle,
   cacheArticle,
+  getMostViewedArticles,
+  cacheMostViewedArticles,
+  topArticlesIds,
+  incArtilceViews,
 }
