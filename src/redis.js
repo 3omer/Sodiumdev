@@ -25,6 +25,7 @@ const setAsync = promisify(client.set).bind(client)
 const zincrbyAsync = promisify(client.zincrby).bind(client)
 const lrangeAsync = promisify(client.lrange).bind(client)
 const rpushAsync = promisify(client.rpush).bind(client)
+const zscoreAsync = promisify(client.zscore).bind(client)
 
 /**
  * return posts list ordered by time posted desc
@@ -143,6 +144,16 @@ const cacheMostViewedArticles = async (articles) => {
   client.expire(MOST_VIEWED_KEY, MOST_VIEWED_EXP)
 }
 
+/**
+ * return artilce views count
+ * @param {string} artilceId artilce's id
+ * @returns {number}
+ */
+const getArticleViewsCount = async (artilceId) => {
+  const views = await zscoreAsync(ARTICLES_VIEWS_KEY, artilceId).catch((err) => logger.error(err))
+  return Number.parseInt(views, 10) || 0
+}
+
 module.exports = {
   client,
   cacheRecentArticles,
@@ -153,4 +164,5 @@ module.exports = {
   cacheMostViewedArticles,
   topArticlesIds,
   incArtilceViews,
+  getArticleViewsCount,
 }

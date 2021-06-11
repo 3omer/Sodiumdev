@@ -9,6 +9,7 @@ const Article = require('../models/articles')
 const Comment = require('../models/comments')
 const access = require('../models/access')
 const { incArtilceViews } = require('../redis')
+const { populateArticlesViews } = require('../utils/helpers')
 
 const index = async (req, res, next) => {
   const { q } = req.query
@@ -19,6 +20,7 @@ const index = async (req, res, next) => {
     } else if (q === 'top') {
       articles = await access.getMostViewedArticles(10)
     }
+    articles = await populateArticlesViews(articles)
     return res.render('index', { articles })
   } catch (error) {
     return next(error)

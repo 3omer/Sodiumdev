@@ -1,3 +1,5 @@
+const { getArticleViewsCount } = require('../redis')
+
 /**
  * transform linear list of vlaue scores to list of object eg. [{value: 'my value', score: 3}]
  * @param {Array} list linear list of values and scores
@@ -20,4 +22,13 @@ const transformRedisRange = (list, options = { dataKey: 'data', scoreKey: 'score
   })
   return structuredList
 }
-module.exports = { transformRedisRange }
+
+const populateArticlesViews = async (articles) => {
+  const promises = articles.map((artilce) => getArticleViewsCount(artilce.id))
+  const views = await Promise.all(promises)
+  return articles.map((artilce, index) => {
+    artilce.views = views[index]
+    return artilce
+  })
+}
+module.exports = { transformRedisRange, populateArticlesViews }

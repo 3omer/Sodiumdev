@@ -1,6 +1,7 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose')
 const shortid = require('shortid')
+const redisStore = require('../redis')
 
 // todo: add tags, likes(claps, loved), slug
 const articleScehma = new mongoose.Schema({
