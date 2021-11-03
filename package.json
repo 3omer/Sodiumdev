@@ -30,7 +30,7 @@
     "pug": "^2.0.4",
     "redis": "^3.0.2",
     "shortid": "^2.2.16",
-    "validator": "^13.1.1"
+    "validator": "^13.7.0"
   },
   "engines": {
     "node": "10.x"
