@@ -42,7 +42,7 @@
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "prettier": "^2.2.1",
     "supertest": "^4.0.2"
   }
